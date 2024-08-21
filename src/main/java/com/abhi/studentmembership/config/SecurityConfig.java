@@ -35,25 +35,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityConfiguration(HttpSecurity http) throws Exception {
         return http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(csrf -> csrf.disable()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(authz -> authz.requestMatchers(HttpMethod.POST, "/authenticate").permitAll()
-//                        .requestMatchers("/api/student/permit").permitAll()
+
                 .requestMatchers("/api/**").authenticated().anyRequest().authenticated()).addFilterBefore(jwtfilter, UsernamePasswordAuthenticationFilter.class).build();
-		/*return http
-            .csrf().disable().authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/authenticate").permitAll()
-                .and().authorizeHttpRequests().requestMatchers("/api/**").authenticated()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .addFilterBefore(jwtfilter, UsernamePasswordAuthenticationFilter.class).build();*/
+		
 
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // İzin verilen kökenler
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // İzin verilen HTTP metodları
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); 
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.addExposedHeader("Authorization");// İzin verilen başlıklar
+        configuration.addExposedHeader("Authorization");
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
